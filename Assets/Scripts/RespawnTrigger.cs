@@ -4,9 +4,10 @@ public class RespawnTrigger : MonoBehaviour
 {
     [SerializeField] private Transform respawnPoint;
 
+    // Use OnTriggerEnter OR OnControllerColliderHit to be 100% safe
     void OnTriggerEnter(Collider other)
     {
-        CharacterController controller = other.gameObject.GetComponent<CharacterController>();
+        CharacterController controller = other.GetComponent<CharacterController>();
 
         if (controller != null)
         {
@@ -16,13 +17,16 @@ public class RespawnTrigger : MonoBehaviour
 
     private void Respawn(CharacterController controller)
     {
-        // Step 1: disable controller to avoid collision issues
+        // 1. Kill the movement entirely
         controller.enabled = false;
 
-        // Step 2: move player to respawn point
-        controller.gameObject.transform.position = respawnPoint.position;
+        // 2. Move to the point
+        controller.transform.position = respawnPoint.position;
 
-        // Step 3: re-enable controller
+        // 3. FORCE Unity to update the physics engine immediately
+        Physics.SyncTransforms();
+
+        // 4. Turn it back on
         controller.enabled = true;
     }
 }
