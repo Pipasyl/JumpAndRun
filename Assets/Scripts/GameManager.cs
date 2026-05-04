@@ -45,7 +45,8 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void ClearLevel() {
+    private void ClearLevel()
+    {
 
         this.currentBlocks.Clear();
     }
@@ -61,13 +62,13 @@ public class GameManager : MonoBehaviour
         float yInterval = this.bounds.height / (float)(this.tiles.y - 1);
 
         int symbolCounter = 0;
-        for(int i = 0; i < levelString.Length; i++)
+        for (int i = 0; i < levelString.Length; i++)
         {
             int x = symbolCounter % tiles.x;
             int y = symbolCounter / tiles.x;
 
             char c = levelString[i];
-            if(c >= '0' && c <= '9')
+            if (c >= '0' && c <= '9')
             {
                 int blockStrength = c - '0';
 
@@ -87,7 +88,8 @@ public class GameManager : MonoBehaviour
                 this.currentBlocks.Add(blockComponent);
 
                 symbolCounter++;
-            } else if(c == '-')
+            }
+            else if (c == '-')
             {
                 symbolCounter++;
             }
@@ -96,7 +98,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(this.levels.Count > 0)
+        if (this.levels.Count > 0)
         {
             this.LoadLevel(this.levels[this.currentLevel]);
         }
@@ -115,12 +117,12 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        
-        if(AllBlocksAreDestroyed())
+
+        if (AllBlocksAreDestroyed())
         {
             this.currentLevel++;
 
-            if(this.currentLevel < this.levels.Count)
+            if (this.currentLevel < this.levels.Count)
             {
                 this.LoadLevel(this.levels[this.currentLevel]);
             }

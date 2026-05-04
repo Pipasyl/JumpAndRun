@@ -1,17 +1,11 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
-public class CoinController : MonoBehaviour
+public class Coin : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed = 90f;
     [SerializeField] private AudioClip collectSound;
-
-    // Changed this from AudioClip to AudioSource so it can actually .Play()
-    private AudioSource audioSource;
-
-    private void Awake()
-    {
-        audioSource = GetComponent<AudioSource>();
-    }
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     void Update()
     {
@@ -20,15 +14,22 @@ public class CoinController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            // Play the sound at the coin's position
-            if (collectSound != null)
-            {
-                AudioSource.PlayClipAtPoint(collectSound, transform.position);
-            }
+        if (!other.CompareTag("Player"))
+            return;
 
-            Destroy(gameObject);
+        UIManager.Instance.CollectCoin();
+
+        if (collectSound != null)
+        {
+            var go = new GameObject("CoinCollectSound");
+            go.transform.position = transform.position;
+            var source = go.AddComponent<AudioSource>();
+            source.clip = collectSound;
+            source.outputAudioMixerGroup = sfxMixerGroup;
+            source.Play();
+            Destroy(go, collectSound.length);
         }
+
+        Destroy(gameObject);
     }
 }

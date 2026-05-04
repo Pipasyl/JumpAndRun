@@ -2,87 +2,70 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    [Header("Powerup Settings")]
-    [SerializeField] private float powerupChancePerStrength = 0.01f;
-    [SerializeField] private GameObject powerupSprite;
-    [SerializeField] private GameObject powerupPrefab;
+    #region Public Fields
 
-    [Header("Block Visuals")]
-    [SerializeField] private Gradient blockColor;
-    [SerializeField, Range(0, 9)] public int startStrength;
-    [SerializeField] private MeshRenderer blockMesh;
+    public float powerupChancePerStrength = 0.01f;
 
-    private const int MAX_BLOCK_STRENGTH = 9;
+    public GameObject powerupSprite;
+    public GameObject powerupPrefab;
 
-    // Caching the shader property ID is much faster than using the string "_Tint"
-    private static readonly int TintPropertyId = Shader.PropertyToID("_Tint");
+    public Gradient blockColor;
+
+    [Range(0, 9)]
+    public int startStrength;
+
+    public MeshRenderer blockMesh;
+
+    #endregion
+
+    #region Private Fields
+
+    private static readonly int MAX_BLOCK_STRENGTH = 9;
+    private static readonly string BLOCK_TINT = "_Tint";
 
     private bool hasPowerup = false;
+
+    private float powerupChance = 0.0f;
+
     private int currentStrength = 0;
+
     private MaterialPropertyBlock mpb;
 
-    private void Start()
+    #endregion
+
+    void Start()
     {
-        mpb = new MaterialPropertyBlock();
-        currentStrength = startStrength;
+        this.mpb = new MaterialPropertyBlock();
+        this.currentStrength = this.startStrength;
+        this.powerupChance = this.powerupChancePerStrength * this.startStrength;
 
-        float powerupChance = powerupChancePerStrength * startStrength;
-
-        // Determine if this block gets a powerup
-        if (Random.value < powerupChance)
+        if (Random.value < this.powerupChance)
         {
-            hasPowerup = true;
-            if (powerupSprite != null) powerupSprite.SetActive(true);
+            this.powerupSprite.SetActive(true);
+            this.hasPowerup = true;
         }
-        else
-        {
-            // Make sure the sprite is hidden if it didn't get a powerup
-            if (powerupSprite != null) powerupSprite.SetActive(false);
-        }
-
-        // Set the initial color once at the start!
-        UpdateColor();
     }
 
-    /// <summary>
-    /// Updates the block's material color based on its current strength.
-    /// Call this whenever the block takes damage!
-    /// </summary>
-    private void UpdateColor()
+    void Update()
     {
-        if (blockMesh == null) return;
+        float strengthPercent = this.currentStrength / (float)MAX_BLOCK_STRENGTH;
+        var color = this.blockColor.Evaluate(strengthPercent);
 
-        float strengthPercent = currentStrength / (float)MAX_BLOCK_STRENGTH;
-        Color color = blockColor.Evaluate(strengthPercent);
-
-        // Best practice: get the current block, modify it, then set it back
-        blockMesh.GetPropertyBlock(mpb);
-        mpb.SetColor(TintPropertyId, color);
-        blockMesh.SetPropertyBlock(mpb);
+        this.mpb.SetColor(BLOCK_TINT, color);
+        this.blockMesh.SetPropertyBlock(this.mpb);
     }
 
     private void OnDestroy()
     {
-        // Only spawn the powerup if the scene is active (prevents errors when closing the game)
-        if (hasPowerup && gameObject.scene.isLoaded && powerupPrefab != null)
+        if (this.hasPowerup)
         {
-            Instantiate(powerupPrefab, transform.position, Quaternion.identity);
+            if (!this.gameObject.scene.isLoaded) return;
+            var powerup = GameObject.Instantiate(this.powerupPrefab);
+            powerup.transform.position = this.transform.position;
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // This is where you will handle the block getting hit!
-        // Example of what you will likely add here later:
-
-        /*
-        currentStrength--;
-        UpdateColor(); // Update the visuals ONLY when it gets hit!
-        
-        if (currentStrength <= 0)
-        {
-            Destroy(gameObject);
-        }
-        */
     }
 }

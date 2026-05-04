@@ -1,68 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float jumpForce = 8f;
-    public float gravity = 20f;
+    #region Public Fields
 
-    private CharacterController controller;
-    private Vector3 velocity = Vector3.zero;
-    private Vector3 platformVelocity = Vector3.zero;  // ← add this line
+    public float moveSpeed;
+    public float poweredUpTime = 10.0f;
+
+    public float poweredUpScaleX = 2.0f;
+
+    public Vector2 movementRangeSmall;
+    public Vector2 movementRangeLarge;
+
+    #endregion
+
+    #region Private Fields
+
+    private bool isPoweredUp = false;
+
+    private float powerTimer = 0.0f;
+
+    private Rigidbody rb;
+
+    #endregion
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        this.rb = this.GetComponentInChildren<Rigidbody>();
     }
 
-    void FixedUpdate()   // ← was Update() before
+    void FixedUpdate()
     {
-        float h = Input.GetKey(KeyCode.D) ? 1 : Input.GetKey(KeyCode.A) ? -1 : 0;
-        float v = Input.GetKey(KeyCode.W) ? 1 : Input.GetKey(KeyCode.S) ? -1 : 0;
 
-        Vector3 move = new Vector3(h, 0, v) * moveSpeed * Time.fixedDeltaTime;
-
-        Vector3 moveDirection = new Vector3(h, 0, v);
-        if (moveDirection.magnitude > 0.1f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                Time.fixedDeltaTime * 10f
-            );
-        }
-
-        if (controller.isGrounded && Input.GetKey(KeyCode.Space))
-        {
-            velocity.y = jumpForce;
-        }
-
-        velocity.y -= gravity * Time.fixedDeltaTime;
-        move.y = velocity.y * Time.fixedDeltaTime;
-
-        GetPlatformVelocity();
-
-        var combinedMovement = move + platformVelocity * Time.fixedDeltaTime;
-        controller.Move(combinedMovement);
     }
 
-    private void GetPlatformVelocity()
+    public void DeactivtePowerup()
     {
-        RaycastHit hit;
-        int platformLayer = LayerMask.GetMask("Platforms");
 
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.2f, platformLayer))
-        {
-            MovingPlatform platform = hit.collider.GetComponent<MovingPlatform>();
-            if (platform != null)
-            {
-                platformVelocity = platform.GetVelocity();
-            }
-        }
-        else
-        {
-            platformVelocity = Vector3.zero;
-        }
+    }
+
+    public void ActivatePowerup()
+    {
+
     }
 }

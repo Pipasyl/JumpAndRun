@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="Parent" style="flex-grow: 1; -unity-font-definition: resource(&quot;FlatSkin/Font/Roboto-BlackItalic&quot;); background-image: url(&quot;project://database/Assets/Textures/KenneyRPGUI/PNG/panel_brown.png?fileID=2800000&amp;guid=8fa5fd7672712aa459d6bd70a34a9e86&amp;type=3#panel_brown&quot;); background-size: 100% 15%;">
+        <ui:Label text="Label"/>
+    </ui:VisualElement>
+</ui:UXML>
