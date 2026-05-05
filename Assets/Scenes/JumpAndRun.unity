@@ -1968,11 +1968,11 @@ RectTransform:
   - {fileID: 1805578481}
   m_Father: {fileID: 325187618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 45, y: -1200}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 1450, y: -25}
   m_SizeDelta: {x: 600, y: 80}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &381537400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2295,13 +2295,13 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: a822f74b1e622f84697b010e4e0fc8a7, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.786
+  m_Volume: 0.896
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 163
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 5
@@ -2397,6 +2397,7 @@ MonoBehaviour:
   idleSound: {fileID: 8300000, guid: a822f74b1e622f84697b010e4e0fc8a7, type: 3}
   cuttingSound: {fileID: 8300000, guid: d0d153b728f4d2c4ea0e4039a376ddc5, type: 3}
   sparklingParticles: {fileID: 1839762212}
+  bloodParticlePrefab: {fileID: 3713737445028939052, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
 --- !u!65 &457869680
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2623,7 +2624,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 8
+      scalar: 0.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -2676,7 +2677,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 8
+      scalar: 7
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -2794,7 +2795,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -3118,7 +3119,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -3172,7 +3173,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 18
-    angle: 45
+    angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -3258,7 +3259,7 @@ ParticleSystem:
     sphericalDirectionAmount: 1
     randomPositionAmount: 0
     radius:
-      value: 1
+      value: 0.1
       mode: 0
       spread: 0
       speed:
@@ -3377,7 +3378,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 30
+      scalar: 50
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -7282,7 +7283,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 205
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -11078,7 +11079,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -19470,6 +19471,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7845649355140247761, guid: b11542d6a52f8244eaac3cc3a10f35fb, type: 3}
   m_PrefabInstance: {fileID: 2123817605}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6090872052100812756
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3713737445028939052, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_Name
+      value: BloodParticle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -18987770
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.47429
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6634317986618805558, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 07e73402f5d32db4a8ab35692d94846d, type: 3}
 --- !u!1001 &8830780345903566297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19550,3 +19608,4 @@ SceneRoots:
   - {fileID: 153635750}
   - {fileID: 43152213}
   - {fileID: 8830780345903566297}
+  - {fileID: 6090872052100812756}

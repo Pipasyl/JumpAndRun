@@ -17,6 +17,7 @@ public class SawController : MonoBehaviour
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem sparklingParticles;
+    [SerializeField] private GameObject bloodParticlePrefab;
 
     private AudioSource audioSource;
     private bool isCutting;
@@ -56,18 +57,26 @@ public class SawController : MonoBehaviour
     }
 
     private void OnTriggerStay(Collider other)
-{
-    Debug.Log("OnTriggerStay hit by: " + other.name + " tag: " + other.tag);
-    if (other.CompareTag("Player"))
     {
-        var character = other.GetComponentInParent<Character>();
-        if (character != null)
+        if (other.CompareTag("Player"))
         {
-            character.InflictDamage(this.damagePerSecond * Time.fixedDeltaTime);
+            // Only the BoxCollider should deal damage, not the audio spheres
+            Collider col = other.GetComponent<Collider>();
+            if (GetComponent<BoxCollider>().bounds.Intersects(other.bounds))
+            {
+                var character = other.GetComponentInParent<Character>();
+                if (character != null)
+                {
+                    character.InflictDamage(damagePerSecond * Time.fixedDeltaTime);
+                    if (bloodParticlePrefab != null)
+                    {
+                        GameObject blood = Instantiate(bloodParticlePrefab, other.transform.position, Quaternion.identity);
+                        Destroy(blood, 0.5f);
+                    }
+                }
+            }
         }
     }
-}
-
     private void SetState(bool newState)
     {
         if (isCutting == newState)
@@ -83,6 +92,12 @@ public class SawController : MonoBehaviour
             }
             if (sparklingParticles != null)
                 sparklingParticles.Play();
+
+            if (bloodParticlePrefab != null)
+            {
+                GameObject blood = Instantiate(bloodParticlePrefab, transform.position, Quaternion.identity);
+                Destroy(blood, 0.5f);
+            }
         }
         else
         {
