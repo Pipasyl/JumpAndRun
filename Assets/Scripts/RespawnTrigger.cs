@@ -7,10 +7,11 @@ public class RespawnTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        CharacterController cc = other.gameObject.GetComponent<CharacterController>();
-        if (cc != null)
+        Character character = other.gameObject.GetComponent<Character>();
+        if (character != null)
         {
-            Respawn(cc);
+            // Set health to 0 to trigger the UI fade from the slides
+            character.InflictDamage(character.GetMaxHealth());
         }
     }
 

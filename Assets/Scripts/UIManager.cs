@@ -37,6 +37,8 @@ public class UIManager : MonoBehaviour
 
         this.hudCanvasGroup.alpha = 0.0f;
         this.gameOverCanvasGroup.alpha = 1.0f;
+        this.gameOverCanvasGroup.interactable = true; // Allows clicking [cite: 449]
+        this.gameOverCanvasGroup.blocksRaycasts = true; // Allows the mouse to "hit" the buttons [cite: 451]
     }
 
 
@@ -68,6 +70,43 @@ public class UIManager : MonoBehaviour
     private class PlayerStatistics
     {
         public int coinCounter = 0;
+    }
+    public void FadeInHUD()
+    {
+        StopAllCoroutines();
+        hudCanvasGroup.alpha = 1.0f;
+        gameOverCanvasGroup.alpha = 0.0f;
+        isFadingInGameOver = false;
+
+        // Reset coins too
+        statistics.coinCounter = 0;
+        coinCounterText.text = "Coins: 0";
+    }
+    public void RespawnPlayer()
+    {
+        // Fade out Game Over, fade in HUD
+        StopAllCoroutines();
+        this.hudCanvasGroup.alpha = 1.0f;
+        this.gameOverCanvasGroup.alpha = 0.0f;
+        this.isFadingInGameOver = false;
+
+        // Reset coins
+        this.statistics.coinCounter = 0;
+        this.coinCounterText.text = "Coins: 0";
+
+        // ← NEW: Make all coins reappear
+        Coin[] allCoins = FindObjectsOfType<Coin>(true);  // true = include inactive objects
+        foreach (Coin coin in allCoins)
+        {
+            coin.Reappear();
+        }
+
+        // Reset character health and position
+        this.character.Respawn();
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
 }

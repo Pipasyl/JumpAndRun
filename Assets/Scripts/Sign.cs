@@ -1,56 +1,89 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using UnityEngine.Localization;
 
 public class Sign : MonoBehaviour
 {
-    [SerializeField] private GameObject dialogueBox;
+    [SerializeField] private UIDocument uiDocument;
     [SerializeField] private LocalizedString dialogueText;
-
-    
     [SerializeField] private Character character;
+    [SerializeField] private GameObject doorToOpen;
+    [SerializeField] private GameObject respawnPoufPrefab; // ← NEW: Slot for your Pouf!
+    [SerializeField] private string successText = "You got everything! Door is open.";
+    [SerializeField] private string notEnoughText = "You need 5 coins to pass!";
+    [SerializeField] private int coinsRequired = 5;
 
-    private bool canInteract;
-    private InputAction inputAction;
+    private Label signLabel;
+    private VisualElement uiRoot;
 
     private void Start()
     {
-        this.inputAction = InputSystem.actions.FindAction("Attack");
-        this.inputAction.performed += ToggleDialogueBox;
-
-        this.dialogueBox.SetActive(false);
-        this.canInteract = false;
+        if (this.uiDocument != null)
+        {
+            uiRoot = this.uiDocument.rootVisualElement;
+            signLabel = uiRoot.Q<Label>("sign");
+            uiRoot.style.display = DisplayStyle.None;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        this.canInteract = true;
+
+        Character livePlayerChar = other.GetComponent<Character>();
+        Character charToCheck = livePlayerChar != null ? livePlayerChar : this.character;
+
+        if (uiRoot != null && signLabel != null)
+        {
+            uiRoot.style.display = DisplayStyle.Flex;
+
+            if (charToCheck != null && charToCheck.coins >= this.coinsRequired)
+            {
+                signLabel.text = this.successText;
+            }
+            else
+            {
+                try
+                {
+                    if (this.dialogueText != null && !this.dialogueText.IsEmpty)
+                        signLabel.text = this.dialogueText.GetLocalizedString();
+                    else
+                        signLabel.text = this.notEnoughText;
+                }
+                catch
+                {
+                    signLabel.text = this.notEnoughText;
+                }
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        this.canInteract = false;
-        this.dialogueBox.SetActive(false);
-    }
 
-    private void ToggleDialogueBox(InputAction.CallbackContext context)
-    {
-        // Only trigger if the player is standing near the sign
-        if (this.canInteract)
+        Character livePlayerChar = other.GetComponent<Character>();
+        Character charToCheck = livePlayerChar != null ? livePlayerChar : this.character;
+
+        if (uiRoot != null)
         {
-            this.dialogueBox.SetActive(true);
-            var uiDocument = this.dialogueBox.GetComponent<UIDocument>();
-            var label = uiDocument.rootVisualElement.Q<Label>();
-            label.text = this.dialogueText.GetLocalizedString();
+            uiRoot.style.display = DisplayStyle.None;
         }
-        else
+
+        if (charToCheck != null && charToCheck.coins >= this.coinsRequired)
         {
-            // If they move away or aren't interacting, keep it closed
-            this.dialogueBox.SetActive(false);
+            if (this.doorToOpen != null)
+            {
+                Destroy(this.doorToOpen);
+            }
+
+            // ← NEW: Spawn the Pouf effect at the sign's exact position
+            if (this.respawnPoufPrefab != null)
+            {
+                Instantiate(this.respawnPoufPrefab, transform.position, Quaternion.identity);
+            }
+
+            this.gameObject.SetActive(false);
         }
     }
 }

@@ -3,6 +3,10 @@ using UnityEngine.InputSystem;
 
 public class Character : MonoBehaviour
 {
+    // The variables added for the Sign interaction
+    public bool hasHeart = false;
+    public int coins = 0;
+
     [SerializeField] private float maxHealth = 100.0f;
     private float currentHealth;
 
@@ -12,11 +16,14 @@ public class Character : MonoBehaviour
     private bool isJumping = false;
     private bool wasGroundedLastFrame = true;
 
+    // NEW: Boolean to track if we already played the death sound
+    private bool isDead = false;
+
     private float jumpCooldownTimer;
 
     private CharacterController controller;
+    private Vector3 spawnPosition;
 
-    
     private Animator animator;
 
     private InputAction moveAction;
@@ -28,12 +35,20 @@ public class Character : MonoBehaviour
     [SerializeField] private float dampening;
     [SerializeField] private float gravity;
     [SerializeField] private float jumpSpeed;
+    [SerializeField] private GameObject respawnPoofPrefab;
 
+    [Header("Audio")]
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioSource footstepSource;
     [SerializeField] private AudioClip jumpClip;
     [SerializeField] private AudioClip landClip;
     [SerializeField] private AudioClip footstepClip;
+    [SerializeField] private AudioClip deathSound; // NEW: The falling/death sound!
+
+    [Header("UI & Respawn")]
+    [SerializeField] private Transform respawnPoint;
+    [SerializeField] private CanvasGroup gameOverCanvas;
+    [SerializeField] private CanvasGroup hudCanvas;
 
     private Vector3 characterMovement;
     private Vector3 characterGravity;
@@ -77,7 +92,6 @@ public class Character : MonoBehaviour
         this.jumpCooldownTimer -= Time.fixedDeltaTime;
     }
 
-    
     void SetAnimationState(Vector2 inputMovement)
     {
         this.animator.SetBool("IsJumping", this.isJumping);
@@ -88,10 +102,7 @@ public class Character : MonoBehaviour
     private void Start()
     {
         this.controller = this.GetComponent<CharacterController>();
-
-        
         this.animator = this.GetComponent<Animator>();
-
         this.moveAction = InputSystem.actions.FindAction("Move");
         this.jumpAction = InputSystem.actions.FindAction("Jump");
         this.jumpCooldownTimer = 0.0f;
@@ -102,10 +113,35 @@ public class Character : MonoBehaviour
             footstepSource.clip = footstepClip;
             footstepSource.loop = true;
         }
+        spawnPosition = transform.position;
     }
 
     private void FixedUpdate()
     {
+        if (this.currentHealth <= 0)
+        {
+            // NEW: Only trigger the death sound ONCE
+            if (!isDead)
+            {
+                isDead = true; // Mark as dead so this doesn't repeat every frame
+
+                // Stop footsteps if they were playing while falling
+                if (footstepSource && footstepSource.isPlaying) footstepSource.Stop();
+
+                // Play death/falling sound
+                if (sfxSource && deathSound) sfxSource.PlayOneShot(deathSound);
+            }
+
+            this.SetAnimationState(Vector2.zero);
+
+            // FREEZE movement completely
+            characterMovement = Vector3.zero;
+            characterGravity = Vector3.zero;
+            jumpVelocity = Vector3.zero;
+
+            return;
+        }
+
         this.HandleJumping();
 
         if (this.controller.isGrounded && !wasGroundedLastFrame)
@@ -116,7 +152,6 @@ public class Character : MonoBehaviour
 
         var inputMovement = this.moveAction.ReadValue<Vector2>();
 
-        
         this.SetAnimationState(inputMovement);
 
         if (this.controller.isGrounded && inputMovement.sqrMagnitude > 0.1f)
@@ -186,8 +221,7 @@ public class Character : MonoBehaviour
 
         if (enemy != null)
         {
-            // Only kill if the Mage is falling (negative Y velocity) 
-            // and is currently in the jumping state
+            Debug.Log($"Y movement: {this.characterMovement.y}, IsJumping: {this.isJumping}");
             if (this.characterMovement.y < -0.1f && this.isJumping)
             {
                 enemy.SquashEnemy();
@@ -197,5 +231,39 @@ public class Character : MonoBehaviour
                 this.isJumping = true;
             }
         }
+    }
+
+    public void Respawn()
+    {
+        // NEW: Reset the death boolean so they can die again later
+        isDead = false;
+
+        // Poof at death position
+        if (respawnPoofPrefab != null)
+        {
+            GameObject poof = Instantiate(respawnPoofPrefab, transform.position, Quaternion.identity);
+            Destroy(poof, 1f);
+        }
+
+        // Reset health
+        currentHealth = maxHealth;
+
+        // Teleport to respawn point
+        controller.enabled = false;
+        transform.position = GameObject.Find("RespawnPoint").transform.position;
+        controller.enabled = true;
+
+        // Poof at respawn position
+        if (respawnPoofPrefab != null)
+        {
+            GameObject poof = Instantiate(respawnPoofPrefab, GameObject.Find("RespawnPoint").transform.position, Quaternion.identity);
+            Destroy(poof, 1f);
+        }
+
+        // Reset movement
+        characterMovement = Vector3.zero;
+        characterGravity = Vector3.zero;
+        jumpVelocity = Vector3.zero;
+        isJumping = false;
     }
 }

@@ -1,28 +1,39 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    public static bool requiredEnemyDefeated = false;
+
     [SerializeField] private AudioClip squashSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private GameObject deathParticlePrefab;
 
     public void SquashEnemy()
     {
-        // 1. Spawn sparkles at enemy position
+        requiredEnemyDefeated = true;
+
+        // NEW: Turn off the Animator so it stops forcing the bones back to normal size!
+        Animator anim = GetComponent<Animator>();
+        if (anim != null)
+        {
+            anim.enabled = false;
+        }
+
         if (deathParticlePrefab != null)
         {
             GameObject particles = Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
             Destroy(particles, 1f);
         }
 
-        // 2. Play sound
         if (audioSource && squashSound)
         {
             audioSource.PlayOneShot(squashSound);
         }
 
-        // 3. Squash and destroy
+        // Squash him into a pancake
         transform.localScale = new Vector3(transform.localScale.x * 1.5f, transform.localScale.y * 0.2f, transform.localScale.z * 1.5f);
-        Destroy(gameObject, 0.2f);
+
+        // Changed to 0.5f so he stays on the ground as a pancake for half a second before disappearing!
+        Destroy(gameObject, 0.5f);
     }
 }

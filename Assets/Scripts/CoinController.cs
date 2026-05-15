@@ -17,6 +17,14 @@ public class Coin : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
+        // --- NEW: Actually give the coin to the Player's script! ---
+        Character player = other.GetComponent<Character>();
+        if (player != null)
+        {
+            player.coins += 1;
+        }
+        // -----------------------------------------------------------
+
         UIManager.Instance.CollectCoin();
 
         if (collectSound != null)
@@ -30,6 +38,12 @@ public class Coin : MonoBehaviour
             Destroy(go, collectSound.length);
         }
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);  // ← CHANGED: Disable instead of Destroy
+    }
+
+    // ← NEW: Method to make coin reappear
+    public void Reappear()
+    {
+        gameObject.SetActive(true);
     }
 }
