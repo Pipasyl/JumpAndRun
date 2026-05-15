@@ -15747,6 +15747,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3531215052326076779, guid: d0387f430ece09849b78fb76f0ece38f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 784330924}
+    - targetCorrespondingSourceObject: {fileID: 3531215052326076779, guid: d0387f430ece09849b78fb76f0ece38f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 784330930}
   m_SourcePrefab: {fileID: 100100000, guid: d0387f430ece09849b78fb76f0ece38f, type: 3}
 --- !u!1 &784330923 stripped
 GameObject:
@@ -15768,11 +15771,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.55, y: 1, z: 0.2}
+  m_Size: {x: 0.55, y: 1, z: 0.1}
   m_Center: {x: 0.00026464465, y: 0.45, z: 0.015136031}
 --- !u!114 &784330925
 MonoBehaviour:
@@ -15790,6 +15793,27 @@ MonoBehaviour:
   adviceMessage: 'Warning: The Mage Health Insurance Policy does not cover injuries
     sustained from spiked pits, giant saw blades, or angry monsters. Please collect
     your shiny coins responsibly.'
+--- !u!65 &784330930
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784330923}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 1.3, z: 0.25}
+  m_Center: {x: 0.00026464465, y: 0.45, z: 0.015136031}
 --- !u!1 &796399332 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7469932644438403691, guid: b11542d6a52f8244eaac3cc3a10f35fb, type: 3}
