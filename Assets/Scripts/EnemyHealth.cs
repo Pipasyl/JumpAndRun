@@ -7,12 +7,26 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private AudioClip squashSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private GameObject deathParticlePrefab;
+    [SerializeField] private float damageAmount = 10f;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Check if we hit the player
+        if (other.CompareTag("Player"))
+        {
+            Character player = other.GetComponent<Character>();
+
+            if (player != null)
+            {
+                player.InflictDamage(damageAmount);
+            }
+        }
+    }
 
     public void SquashEnemy()
     {
         requiredEnemyDefeated = true;
 
-        // NEW: Turn off the Animator so it stops forcing the bones back to normal size!
         Animator anim = GetComponent<Animator>();
         if (anim != null)
         {
@@ -30,10 +44,8 @@ public class EnemyHealth : MonoBehaviour
             audioSource.PlayOneShot(squashSound);
         }
 
-        // Squash him into a pancake
         transform.localScale = new Vector3(transform.localScale.x * 1.5f, transform.localScale.y * 0.2f, transform.localScale.z * 1.5f);
 
-        // Changed to 0.5f so he stays on the ground as a pancake for half a second before disappearing!
         Destroy(gameObject, 0.5f);
     }
 }

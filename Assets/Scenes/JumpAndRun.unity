@@ -9542,6 +9542,7 @@ MonoBehaviour:
   squashSound: {fileID: 8300000, guid: 91c05f80cbff19e47bcff8f6b2c73cd1, type: 3}
   audioSource: {fileID: 538613692}
   deathParticlePrefab: {fileID: 59116880}
+  damageAmount: 10
 --- !u!143 &538613699
 CharacterController:
   m_ObjectHideFlags: 0
@@ -19024,8 +19025,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.7
+  m_Height: 3.4
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!143 &1197391425
@@ -19068,6 +19069,7 @@ MonoBehaviour:
   squashSound: {fileID: 8300000, guid: 91c05f80cbff19e47bcff8f6b2c73cd1, type: 3}
   audioSource: {fileID: 1197391429}
   deathParticlePrefab: {fileID: 59116880}
+  damageAmount: 10
 --- !u!82 &1197391429
 AudioSource:
   m_ObjectHideFlags: 0
